@@ -3,9 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
-    
+    <aside class="sidebar">
+        <div class="logo">Todo</div>
+        <nav>
+            <button type="button" id="home">Home</button>
+            <button type="button" id="today">Today</button>
+            <button type="button" id="week">Week</button>
+            <div>Projects</div>
+            <ul class="projects">
+                <li><button type="button">Test</button></li>
+            </ul>
+        </nav>
+    </aside>
+    <section class="content">
+        <h2>Home</h2>
+        <div class="todos">
+            <div class="todo-item">
+                <input type="checkbox">
+                <div class="todo-name">Title</div>
+                <div class="todo-data">Date</div>
+            </div>
+            <div class="todo-item">
+                <input type="checkbox">
+                <div class="todo-name">Title</div>
+                <div class="todo-data">Date</div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
