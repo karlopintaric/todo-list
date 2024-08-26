@@ -1,78 +1,129 @@
-import { ToDoModel } from "./model";
+import { ToDoModel, ProjectModel } from "./models";
 
-class Storage {
+function LocalStorage(storageName, model) {
 
-    constructor() {
-        if (this.constructor === Storage) {
-            throw new Error('Abstract classes can\'t be instantiated.')
-        }
+    const create = (data) => {
+        const items = getItems();
+        const newId = _getNewId(items);
+
+        data.id = newId;
+
+        _setItem(data, items);
     }
 
-    update() {
-        throw new Error('Method \'update\' must be implemented');
-    }
+    const read = (id) => getItems().filter(obj => obj.id === id)[0];
 
-    save() {
-        throw new Error('Method \'save\' must be implemented');
-    }
+    const update = (id, updateData) => {
+        const items = getItems();
+        const changedObj = read(id);
 
-    remove() {
-        throw new Error('Method \'remove\' must be implemented');
-    }
-
-    read() {
-        throw new Error('Method \'update\' must be implemented');
-    }
-
-}
-
-class LocalUserStorage extends Storage {
-    #model
-
-    constructor(model) {
-        super()
-        this.#model = model;
-    }
-
-    save(data) {
-        const newId = this.#getNewId();
-        const obj = new this.#model(data);
-
-        localStorage.setItem(newId, obj);
-    }
-
-    read(id) {
-        return localStorage.getItem(id);
-    }
-
-    update(id, updateData) {
-        const changedObj = this.read(id);
         for (let prop in updateData) {
             changedObj[prop] = updateData[prop];
         }
 
-        localStorage.setItem(id, changedObj);
+        _setItem(changedObj, items);
     }
 
-    remove(id) {
-        localStorage.removeItem(id);
+    const remove = (id) => {
+        const items = getItems().filter(obj => obj.id !== id);
+
+        _updateStorage(items);
     }
 
-    getAllItems() {
-        return localStorage;
-    }
-
-    #getNewId() {
-        let maxId = 0;
-
-        for (let id in localStorage) {
-            id = parseInt(id);
-            if (id > maxId) maxId = id;
+    const getItems = () => {
+        let items = JSON.parse(localStorage.getItem(storageName))
+        
+        if (!items) {
+            items = [];
         }
 
-        return maxId
+        return items;
+    };
+
+    const getIf = (prop, value) => {
+        return getItems().filter(obj => obj[prop] === value);
     }
 
+    const removeIf = (prop, value) => {
+        const newItems = items.filter(obj => obj[prop] !== value);
+
+        _updateStorage(newItems);
+    }
+
+    const _setItem = (data, items) => {
+        const newObj = model.newEntity(data);
+
+        items.push(newObj);
+        _updateStorage(items);
+    }
+
+    const _getNewId = (items) => {
+        if (items.length === 0) {
+            return 0;
+        }
+
+        const allIds = items.map(obj => obj.id)
+
+        return Math.max(...allIds) + 1;
+    } 
+
+    const _updateStorage = (items) => localStorage.setItem(storageName, JSON.stringify(items));
+
+    return {
+        create,
+        read,
+        update,
+        remove,
+        getIf,
+        removeIf,
+        getItems
+    }
+    
 }
 
-export default LocalUserStorage;
+export default function StorageRouter() {
+
+    const storageMap = {
+        'todo': LocalStorage('todo', ToDoModel()),
+        'project': LocalStorage('project', ProjectModel())
+    }
+
+    const newItem = (data, storageName) => {
+        storageMap[storageName].create(data);
+    }
+
+    const updateItem = (id, data, storageName) => {
+        storageMap[storageName].update(id, data);
+    }
+
+    const removeItem = (id, storageName) => {
+        storageMap[storageName].remove(id);
+    }
+
+    const getItem = (id, storageName) => {
+        return storageMap[storageName].read(id);
+    }
+
+    const getItemsIf = (prop, value, storageName) => {
+        return storageMap[storageName].getIf(prop, value)
+    }
+
+    const removeItemsIf = (prop, value, storageName) => {
+        storageMap[storageName].removeIf(prop, value);
+    }
+ 
+    const getAllItems = (storageName) => {
+        return storageMap[storageName].getItems();
+    }
+
+    return {
+        newItem, 
+        updateItem,
+        removeItem,
+        getItem,
+        getItemsIf,
+        removeItemsIf,
+        getAllItems
+    }
+
+};

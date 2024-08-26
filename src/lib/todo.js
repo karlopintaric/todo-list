@@ -1,24 +1,16 @@
-import storage from "./storage";
+import StorageRouter from "./storage";
 
-class ToDo {
-    #storage
+export default function ToDo() {
+    const storageRouter = StorageRouter();
 
-    constructor(storage) {
-        this.#storage = storage;
+    const createToDo = (data) => {
+        storageRouter.newItem(data, 'todo');
     }
 
-    newToDo(data) {
-        this.#storage.save(data);
-    }
+    const getAllToDos = () => storageRouter.getAllItems('todo');
 
-    getToDo (id) {
-        return JSON.parse(this.#storage.read(id));
+    return {
+        createToDo,
+        getAllToDos
     }
-
-    changeToDo(id, updateData) {
-        this.#storage.update(id, JSON.stringify(updateData));
-    }
-
 }
-
-export default toDoApp;
