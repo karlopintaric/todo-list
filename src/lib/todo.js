@@ -4,6 +4,7 @@ export default function ToDo() {
     const storageRouter = StorageRouter();
 
     const createToDo = (data) => {
+
         storageRouter.newItem(data, 'todo');
     }
 

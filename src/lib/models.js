@@ -17,7 +17,7 @@ function ToDoModel() {
             duedate: _validateDueDate(data.dueDate),
             priority: _validatePriority(data.priority),
             done: _validateCompleted(data.done),
-            project_id: validateIds(data.project_id)
+            project_id: _validateProject(data.projectId)
         }
     }
 
@@ -50,6 +50,15 @@ function ToDoModel() {
         }
 
         return priority;
+    }
+
+
+    const _validateProject = (projectId) => {
+        if (!projectId) {
+            projectId = 0;
+        }
+
+        return projectId;
     }
 
     return {
