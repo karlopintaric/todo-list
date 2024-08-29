@@ -1,10 +1,74 @@
 import './styles.css';
-import ToDoApp from './lib/todo';
+import homePage from './pages/home';
+import todayPage from './pages/today';
+import weekPage from './pages/week';
 
-const app = ToDoApp();
-//app.deleteAll();
-app.createToDo({'title': 'test', 'description': 'test'})
-//app.newToDo({'title': 'test', 'description': 'test'})
-//app.changeToDo(1, {'title': 'An actual title', 'done': true})
-//app.deleteToDo(0);
-console.log(app.getAllToDos())
+import { createToDo } from './lib/todo';
+import { populateProjectsList } from './pages/sidebar';
+import loadProject from './pages/projects';
+
+(function RenderDOM() {
+    // Cache buttons
+    const sidebar = document.querySelector('.sidebar');
+    const pageContent = document.querySelector('.content');
+    const projectsList = document.querySelector('ul.projects');
+
+    const pageMap = {
+        'home': homePage,
+        'today': todayPage,
+        'week': weekPage,
+    };
+
+    const initPage = () => {
+        sidebar.addEventListener('click', handlePageNav);
+        document.querySelector('#home').click();
+        populateProjectsList(projectsList);
+    }
+
+    const handlePageNav = (e) => {
+        const clickTarget = e.target;
+
+        // Do nothing if a tab button is not clicked
+        if (!clickTarget.classList.contains('nav-button')) return;
+
+        // Do nothing if button already active
+        if (clickTarget.classList.contains('active')) return;
+
+        // Make clicked button active
+        inactivateAllButtons();
+        clickTarget.classList.add('active');
+
+        // Load content
+        clearContent();
+        
+        if (clickTarget.classList.contains('project-nav')) {
+            getRequestedProject(clickTarget.dataset.id);
+        } else {
+            getRequestedPage(clickTarget.id);
+        }
+    }
+
+    const inactivateAllButtons = () => {
+        const sidebarButtons = document.querySelectorAll('.nav-button');
+
+        for (let i = 0; i < sidebarButtons.length; i++) {
+            sidebarButtons[i].classList.remove('active');
+        }
+    }
+
+    const clearContent = () => {
+        pageContent.textContent = '';
+    }
+
+    const getRequestedPage = (pageId) => {
+        const loadPage =  pageMap[pageId];
+        loadPage ? loadPage(pageContent) : null;
+    }
+
+    const getRequestedProject = (projectId) => {
+        loadProject(projectId, pageContent);
+    }
+
+    initPage();
+
+})();

@@ -1,20 +1,30 @@
 import StorageRouter from './storage';
 
-export default function Project() {
-    const storageRouter = StorageRouter();
+const storageRouter = StorageRouter();
 
-    const createProject = (name) => {
-        data = {name};
-        storageRouter.newItem(data, 'project');
+function _init() {
+    const projectList = getAllProjects();
+
+    if (projectList.length === 0) {
+        createProject('Default');
     }
+}
 
-    const _init = () => {
-        const projectList = storageRouter.getAllItems('project');
+_init();
 
-        if (projectList.length === 0) {
-            createProject('Default');
-        }
-    }
+export function createProject(name) {
+    const data = {name};
+    storageRouter.newItem(data, 'project');
+}
 
-    _init();
+export function getAllProjects() {
+    const projectList = storageRouter.getAllItems('project');
+
+    return projectList;
+}
+
+export function getProjectById(id) {
+    const project = storageRouter.getItem(id, 'project');
+
+    return project;
 }

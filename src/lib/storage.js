@@ -4,31 +4,27 @@ function LocalStorage(storageName, model) {
 
     const create = (data) => {
         const items = getItems();
-        const newId = _getNewId(items);
 
+        const newId = _getNewId(items);
         data.id = newId;
 
         _setItem(data, items);
     }
 
-    const read = (id) => getItems().filter(obj => obj.id === id)[0];
+    const read = (id) => getIf('id', id)[0];
 
     const update = (id, updateData) => {
-        const items = getItems();
         const changedObj = read(id);
 
         for (let prop in updateData) {
             changedObj[prop] = updateData[prop];
         }
 
-        _setItem(changedObj, items);
+        remove(id);
+        _setItem(changedObj, getItems());
     }
 
-    const remove = (id) => {
-        const items = getItems().filter(obj => obj.id !== id);
-
-        _updateStorage(items);
-    }
+    const remove = (id) => removeIf('id', id);
 
     const getItems = () => {
         let items = JSON.parse(localStorage.getItem(storageName))
@@ -41,13 +37,14 @@ function LocalStorage(storageName, model) {
     };
 
     const getIf = (prop, value) => {
-        return getItems().filter(obj => obj[prop] === value);
+
+        return getItems().filter(obj => obj[prop] == value);
     }
 
     const removeIf = (prop, value) => {
-        const newItems = items.filter(obj => obj[prop] !== value);
+        const items = getItems().filter(obj => obj[prop] != value);
 
-        _updateStorage(newItems);
+        _updateStorage(items);
     }
 
     const _setItem = (data, items) => {
@@ -69,7 +66,7 @@ function LocalStorage(storageName, model) {
 
     const _updateStorage = (items) => localStorage.setItem(storageName, JSON.stringify(items));
 
-    return {
+    return { 
         create,
         read,
         update,

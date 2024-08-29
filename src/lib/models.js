@@ -1,3 +1,5 @@
+import { endOfDay } from "date-fns";
+
 function validateIds(id) {
     if (isNaN(id) || !Number.isInteger(id)) {
         id = null;
@@ -14,10 +16,10 @@ function ToDoModel() {
             id: validateIds(data.id),
             title: _validateTitle(data.title),
             description: _validateDescription(data.description),
-            duedate: _validateDueDate(data.dueDate),
+            dueDate: _validateDueDate(data.dueDate),
             priority: _validatePriority(data.priority),
             done: _validateCompleted(data.done),
-            project_id: _validateProject(data.projectId)
+            projectId: _validateProject(data.projectId)
         }
     }
 
@@ -27,9 +29,9 @@ function ToDoModel() {
 
     const _validateDueDate = (dueDate) => {
         const today = new Date();
-        let duedate =  new Date(dueDate);
+        let duedate =  endOfDay(new Date(dueDate));
 
-        if (isNaN(duedate) || today > duedate) {
+        if (isNaN(duedate) || today > (duedate + 1)) {
             duedate = null;
         }
 
