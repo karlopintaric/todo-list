@@ -4,7 +4,7 @@ import { getDueThisWeek } from "../lib/todo";
 export default function (pageContent) {
     const skeleton = createSkeleton('Due This Week');
     const render = renderToDos(getDueThisWeek, pageContent);
-
+    
     const init = () => {
         pageContent.appendChild(skeleton);
         render();

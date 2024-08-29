@@ -16,3 +16,4 @@ export function populateProjectsList(listElement) {
         listElement.appendChild(listItem);
     }
 }
+
