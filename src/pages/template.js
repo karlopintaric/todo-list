@@ -72,7 +72,8 @@ function handleToDoEdit(e) {
         parentToDo.classList.add('expanded');
     }
 
-    parentToDo.style.border = 'none';
+    // Remove priority border
+    parentToDo.className = parentToDo.className.replace(/priority-[\d]/, '');
     
     // Title
     const toDoTitle = document.createElement('input');
@@ -83,6 +84,7 @@ function handleToDoEdit(e) {
     // Date
     const toDoDate = document.createElement('input');
     toDoDate.type = 'date';
+    toDoDate.format = 'yyyy-MM-dd'
     toDoDate.classList.add('todo-date');
     toDoDate.value = format(item.dueDate, 'yyyy-MM-dd');
 
@@ -97,16 +99,22 @@ function handleToDoEdit(e) {
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.id = 'save-edit'
+    saveButton.addEventListener('click', saveToDoEdit);
 
     // Edit priority button
     const priorityButtons = document.createElement('div');
     priorityButtons.classList.add('priority-buttons');
     for (let i = 0; i < 3; i++) {
-        const editPriorityButton = document.createElement('button');
-        editPriorityButton.dataset.priority = i + 1;
+        const priorityValue = i + 1;
 
-        editPriorityButton.textContent = i + 1;
+        const editPriorityButton = document.createElement('button');
+        editPriorityButton.dataset.priority = priorityValue;
+        editPriorityButton.textContent = priorityValue;
+
         editPriorityButton.classList.add(PRIORITY_CLASSES[i])
+        if (item.priority === priorityValue) {
+            editPriorityButton.classList.add('active');
+        }
 
         editPriorityButton.addEventListener('click', handleChangePriority);
         priorityButtons.appendChild(editPriorityButton);
@@ -120,12 +128,86 @@ function handleToDoEdit(e) {
     parentToDo.appendChild(saveButton);
 }
 
+function saveToDoEdit(e) {
+    const parentToDo = e.target.parentElement;
+    const id = parentToDo.dataset.id;
+    
+    const title = parentToDo.querySelector('.todo-title').value;
+    const dueDate = parentToDo.querySelector('.todo-date').value;
+    const description = parentToDo.querySelector('.todo-desc').value;
+    const priority = parseInt(parentToDo.querySelector('.priority-buttons .active').dataset.priority);
+
+    const updateData = {
+        title,
+        description,
+        dueDate,
+        priority
+    }
+
+    // Update and remove edit mode
+    updateToDo(id, updateData);
+    parentToDo.textContent = '';
+
+    // Get new data
+    const updatedToDoItem = getToDo(id);
+    populateToDoItem(updatedToDoItem, parentToDo);
+
+}
+
 function handleToDoDelete(e) {
     const parentToDo = e.currentTarget;
     const id = parentToDo.dataset.id;
 
     deleteToDo(id);
     parentToDo.remove();
+}
+
+function populateToDoItem(item, toDoDiv) {
+    toDoDiv.className = 'todo-item';
+
+    // Priority
+    toDoDiv.classList.add(`priority-${item.priority}`);
+
+    // Checkbox
+    const toDoCheck = document.createElement('input');
+    toDoCheck.type = 'checkbox';
+    toDoCheck.checked = item.done;
+
+    if (item.done) toDoDiv.classList.add('checked');
+
+    // Title
+    const toDoTitle = document.createElement('p');
+    toDoTitle.classList.add('todo-title');
+    toDoTitle.textContent = item.title;
+
+    // Date
+    const toDoDate = document.createElement('p');
+    toDoDate.classList.add('todo-date');
+    toDoDate.textContent = format(item.dueDate, 'PP');
+
+    // Description
+    const toDoDesc = document.createElement('small');
+    toDoDesc.classList.add('todo-desc')
+    toDoDesc.textContent = `Description: ${item.description}`;
+
+    
+    // Buttons
+    const editButton = document.createElement('button');
+    editButton.id = 'edit-todo';
+    editButton.textContent = '✎'
+
+    const deleteButton = document.createElement('button');
+    deleteButton.id = 'delete-todo';
+    deleteButton.textContent = '✖';
+
+    toDoDiv.appendChild(toDoCheck);
+    toDoDiv.appendChild(toDoTitle);
+    toDoDiv.appendChild(toDoDate);
+    toDoDiv.appendChild(editButton);
+    toDoDiv.appendChild(deleteButton);
+    toDoDiv.appendChild(toDoDesc);
+
+    toDoDiv.dataset.id = item.id;
 }
 
 
@@ -141,49 +223,9 @@ export function renderToDos(fetchFunc, pageContent) {
         todos.forEach(item => {
             // Div
             const toDoDiv = document.createElement('div');
-            toDoDiv.classList.add('todo-item');
             toDoDiv.addEventListener('click', toDoClickHandler);
 
-            // Checkbox
-            const toDoCheck = document.createElement('input');
-            toDoCheck.type = 'checkbox';
-            toDoCheck.checked = item.done;
-
-            if (item.done) toDoDiv.classList.add('checked');
-
-            // Title
-            const toDoTitle = document.createElement('p');
-            toDoTitle.classList.add('todo-title');
-            toDoTitle.textContent = item.title;
-
-            // Date
-            const toDoDate = document.createElement('p');
-            toDoDate.classList.add('todo-date');
-            toDoDate.textContent = format(item.dueDate, 'PP');
-
-            // Description
-            const toDoDesc = document.createElement('small');
-            toDoDesc.classList.add('todo-desc')
-            toDoDesc.textContent = `Description: ${item.description}`;
-            
-            // Buttons
-            const editButton = document.createElement('button');
-            editButton.id = 'edit-todo';
-            editButton.textContent = '✎'
-
-            const deleteButton = document.createElement('button');
-            deleteButton.id = 'delete-todo';
-            deleteButton.textContent = '✖';
-
-            toDoDiv.appendChild(toDoCheck);
-            toDoDiv.appendChild(toDoTitle);
-            toDoDiv.appendChild(toDoDate);
-            toDoDiv.appendChild(editButton);
-            toDoDiv.appendChild(deleteButton);
-            toDoDiv.appendChild(toDoDesc);
-
-            toDoDiv.dataset.id = item.id;
-
+            populateToDoItem(item, toDoDiv);
             toDosContainer.appendChild(toDoDiv)
         });
 
