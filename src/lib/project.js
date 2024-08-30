@@ -28,3 +28,7 @@ export function getProjectById(id) {
 
     return project;
 }
+
+export function removeProject(id) {
+    storageRouter.removeItem(id, 'project');
+}

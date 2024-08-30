@@ -4,14 +4,14 @@ import todayPage from './pages/today';
 import weekPage from './pages/week';
 
 import { createToDo } from './lib/todo';
-import { populateProjectsList } from './pages/sidebar';
+import { populateProjectsList, manageProjectsClickHandler } from './pages/sidebar';
 import loadProject from './pages/projects';
 
 (function RenderDOM() {
     // Cache buttons
     const sidebar = document.querySelector('.sidebar');
     const pageContent = document.querySelector('.content');
-    const projectsList = document.querySelector('ul.projects');
+    const openProjectsModalButton = document.querySelector('.projects-section > button');
 
     const pageMap = {
         'home': homePage,
@@ -21,8 +21,10 @@ import loadProject from './pages/projects';
 
     const initPage = () => {
         sidebar.addEventListener('click', handlePageNav);
+        openProjectsModalButton.addEventListener('click', manageProjectsClickHandler);
+
         document.querySelector('#home').click();
-        populateProjectsList(projectsList);
+        populateProjectsList();
     }
 
     const handlePageNav = (e) => {
