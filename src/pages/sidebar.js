@@ -6,7 +6,6 @@ const projectsList = document.querySelector('ul.projects');
 const contentSection = projectsModal.querySelector('.modal-main');
 
 // Close event listener not working as expected
-const dialog = document.querySelector('dialog');
 projectsModal.addEventListener('keydown', (e) => {
     const key = e.key
     if (key === 'Escape') {
@@ -75,7 +74,7 @@ function removeProjectItem(e) {
 
 export function manageProjectsClickHandler() {
     const closeButton = projectsModal.querySelector('.modal-header button');
-    const addButton = projectsModal.querySelector('.modal-footer  button');
+    const addButton = projectsModal.querySelector('.modal-footer button');
 
 
     closeButton.addEventListener('click', () => {

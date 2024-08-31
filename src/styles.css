@@ -172,7 +172,7 @@ li button {
 
 .todo-item {
     display: grid;
-    grid-template-columns: min-content 3fr 3fr min-content min-content;
+    grid-template-columns: min-content 3fr 1fr min-content min-content;
     justify-items: start;    
     align-items: center;
     gap: 0 16px;
@@ -201,27 +201,36 @@ li button {
     text-overflow: ellipsis;
 }
 
-.todo-date {
+.todo-date,
+.todo-project {
     margin: 0;
     margin-left: auto;
 }
 
 
-.todo-desc {
-    grid-column: 2 / 4;
+.todo-desc,
+.todo-project {
+    font-style: italic;
+}
+
+.todo-date {
+    word-break: break-all;
+}
+
+
+.additional-info {
     max-height: 0;
     overflow: hidden;
-    background-color: var(--background-gray-active);
-    font-style: italic;
 
-    transition: max-height 0.2s ease-out
+    grid-column: 2 / 4;
+    display: grid;
+    grid-template-columns: 5fr max-content;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    width: 100%;
 }
 
-.todo-item > div {
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;
-    display: flex;
-}
 
 .todo-item button {
     background-color: transparent;

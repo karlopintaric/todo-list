@@ -24,6 +24,7 @@ export function getAllProjects() {
 }
 
 export function getProjectById(id) {
+
     const project = storageRouter.getItem(id, 'project');
 
     return project;

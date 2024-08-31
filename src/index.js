@@ -3,15 +3,14 @@ import homePage from './pages/home';
 import todayPage from './pages/today';
 import weekPage from './pages/week';
 
-import { createToDo } from './lib/todo';
 import { populateProjectsList, manageProjectsClickHandler } from './pages/sidebar';
 import loadProject from './pages/projects';
 
 (function RenderDOM() {
     // Cache buttons
     const sidebar = document.querySelector('.sidebar');
-    const pageContent = document.querySelector('.content');
     const openProjectsModalButton = document.querySelector('.projects-section > button');
+    const newToDoModalButton = document.querySelector('#new-todo');
 
     const pageMap = {
         'home': homePage,
@@ -22,6 +21,7 @@ import loadProject from './pages/projects';
     const initPage = () => {
         sidebar.addEventListener('click', handlePageNav);
         openProjectsModalButton.addEventListener('click', manageProjectsClickHandler);
+        //newToDoModalButton.addEventListener('click', newToDoClickHandler);
 
         document.querySelector('#home').click();
         populateProjectsList();
@@ -39,9 +39,6 @@ import loadProject from './pages/projects';
         // Make clicked button active
         inactivateAllButtons();
         clickTarget.classList.add('active');
-
-        // Load content
-        clearContent();
         
         if (clickTarget.classList.contains('project-nav')) {
             getRequestedProject(clickTarget.dataset.id);
@@ -58,17 +55,13 @@ import loadProject from './pages/projects';
         }
     }
 
-    const clearContent = () => {
-        pageContent.textContent = '';
-    }
-
     const getRequestedPage = (pageId) => {
         const loadPage =  pageMap[pageId];
-        loadPage ? loadPage(pageContent) : null;
+        loadPage ? loadPage() : null;
     }
 
     const getRequestedProject = (projectId) => {
-        loadProject(projectId, pageContent);
+        loadProject(projectId);
     }
 
     initPage();

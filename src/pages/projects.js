@@ -1,20 +1,12 @@
-import { createSkeleton } from "./template";
+import { renderPage } from "./template";
 import { getProjectById } from "../lib/project";
+import { getToDosInProject } from "../lib/todo";
 
-export default function (id, pageContent) {
+export default function (id) {
     const project = getProjectById(id);
-
-    const skeleton = createSkeleton(project.name);
-    //const render = renderToDos(getAllToDos, pageContent);
-
-    const init = () => {
-        pageContent.appendChild(skeleton);
-        //render();
-    }
-
-    init();
-
-    //const toDoContainer = document.querySelector('.todos');
-    //createToDo({title: 'Due Today', description: 'Testdsdsadadsaas', dueDate: '2024-08-27'})
-
+    
+    renderPage(
+        project.name,
+        () => getToDosInProject(project.id),
+    )
 }

@@ -6,6 +6,31 @@
     <title>Todo List</title>
 </head>
 <body>
+    <dialog id="todo-modal">
+        <form>
+            <legend>New To-Do</legend>
+            <div>
+                <label for="todo-title-modal">Title</label>
+                <input type="text" class="todo-title" id="todo-title-modal">
+            </div>
+            <div>
+                <label for="todo-date-modal">Due Date</label>
+                <input type="date" class="todo-date" id="todo-date-modal">
+            </div>
+            <div>
+                <label for="todo-desc-modal">Description</label>
+                <input type="text" class="todo-desc" id="todo-desc-modal">
+            </div>
+            <fieldset>
+                <legend>Priority</legend>
+            </fieldset>
+            <div>
+                <label for="todo-project-select-modal">Project</label>
+                <select name="projects" class="todo-projects-select" id="todo-project-select-modal">
+                </select>
+            </div>
+        </form>
+    </dialog>
     <button type="button" class="new-todo center" id="new-todo">+</button>
     <aside class="sidebar">
         <h3 class="logo">Todo</h3>
