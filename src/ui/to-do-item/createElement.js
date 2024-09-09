@@ -29,8 +29,8 @@ export default function createElement({ id, title, dueDate, description, priorit
 
     // Description
     const toDoDesc = document.createElement('small');
-    toDoDesc.classList.add('todo-desc')
-    toDoDesc.textContent = `Description: ${description}`;
+    toDoDesc.classList.add('todo-desc');
+    toDoDesc.textContent = description;
 
     // Project
     const toDoProject = document.createElement('small');

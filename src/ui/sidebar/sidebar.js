@@ -12,7 +12,12 @@ export default function Sidebar(page) {
         createProjectsList();
     }
 
-    const refresh = () => createProjectsList();
+    const _refresh = () => createProjectsList();
+
+    const refreshAll = () => {
+        _refresh();
+        page.refresh();
+    }
 
     const getElement = () => sidebarElement;
     
@@ -20,6 +25,6 @@ export default function Sidebar(page) {
 
     return {
         getElement,
-        refresh
+        refreshAll
     }
 }

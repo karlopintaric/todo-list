@@ -13,8 +13,8 @@ const manageProjectsButton = document.querySelector('.projects-section > button'
 
 const page = Page();
 const sidebar = Sidebar(page);
-const projectsModal = ProjectsModal(sidebar, page);
-const toDosModal = ToDosModal(page);
+const projectsModal = ProjectsModal(sidebar);
+const toDosModal = ToDosModal(sidebar);
 document.querySelector('#home').click();
 
 manageProjectsButton.addEventListener('click', () => projectsModal.open());

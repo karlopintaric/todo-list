@@ -1,14 +1,11 @@
 import { getAllProjects, createProject, removeProject } from "../../lib/project";
 import Modal from "./modal";
 
-export default function ProjectsModal(sidebar, page) {
+export default function ProjectsModal(sidebar) {
     const modal = Modal(
         '#projects-modal',
         () => _populateModal(),
-        () => {
-            sidebar.refresh(),
-            page.refresh()
-        }
+        () => sidebar.refreshAll(),
     )
 
     let modalDialog;

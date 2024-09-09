@@ -2,11 +2,11 @@ import { getAllProjects } from "../../lib/project";
 import { createToDo } from "../../lib/todo";
 import Modal from "./modal";
 
-export default function ToDosModal(page) {
+export default function ToDosModal(sidebar) {
     const modal = Modal(
         '#todo-modal',
         () => _populateProjects(),
-        () => page.refresh(),
+        () => sidebar.refreshAll(),
     )
 
     let modalDialog;
@@ -41,7 +41,7 @@ export default function ToDosModal(page) {
 
     };
     
-    const _addToDo = () => {
+    const _addToDo = (e) => {
 
         const title = modalDialog.querySelector('.todo-title').value;
         const description = modalDialog.querySelector('.todo-desc').value;
@@ -62,7 +62,10 @@ export default function ToDosModal(page) {
         }
         
         createToDo(data);
-        page.refresh();
+
+        modalDialog.querySelector('form').reset();
+        e.preventDefault();
+        modal.close();
     }
 
     _init();
