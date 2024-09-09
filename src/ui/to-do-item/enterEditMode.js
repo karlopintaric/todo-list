@@ -1,16 +1,13 @@
 import { format } from 'date-fns';
 
-const PRIORITY_CLASSES = ['red', 'yellow', 'green'];
+const PRIORITY_CLASSES = ['red', 'yellow', 'green'];    
 
-export default function createEditableToDo({ title, dueDate, description, priority, projectName }, toDoDiv) {
+export default function enterEditMode({ title, dueDate, description, priority}, toDoDiv, saveEditCallback) {
     toDoDiv.textContent = '';
 
     if (!toDoDiv.classList.contains('expanded')) {
         toDoDiv.classList.add('expanded');
     }
-
-    // Remove priority border
-    toDoDiv.className = toDoDiv.className.replace(/priority-[\d]/, '');
     
     // Title
     const toDoTitle = document.createElement('input');
@@ -25,7 +22,7 @@ export default function createEditableToDo({ title, dueDate, description, priori
     toDoDate.classList.add('todo-date');
     toDoDate.value = format(dueDate, 'yyyy-MM-dd');
 
-    // Hidden div
+    // Additional info div
     const additionalInfoDiv = document.createElement('div');
     additionalInfoDiv.classList.add('additional-info');
     additionalInfoDiv.style.maxHeight = '100%';
@@ -37,31 +34,44 @@ export default function createEditableToDo({ title, dueDate, description, priori
     toDoDesc.value = description;
 
     additionalInfoDiv.appendChild(toDoDesc);
-
-    // Save button
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    saveButton.id = 'save-edit'
+    
+    // Remove priority border
+    toDoDiv.className = toDoDiv.className.replace(/priority-[\d]/, '');
 
     // Edit priority button
     const priorityButtons = document.createElement('div');
     priorityButtons.classList.add('priority-buttons');
-    for (let i = 0; i < 3; i++) {
+    PRIORITY_CLASSES.forEach((className, i) => {
         const priorityValue = i + 1;
 
         const editPriorityButton = document.createElement('button');
         editPriorityButton.dataset.priority = priorityValue;
         editPriorityButton.textContent = priorityValue;
 
-        editPriorityButton.classList.add(PRIORITY_CLASSES[i])
+        editPriorityButton.classList.add(className)
         if (priority === priorityValue) {
             editPriorityButton.classList.add('active');
         }
 
-        editPriorityButton.addEventListener('click', handleChangePriority);
+        editPriorityButton.addEventListener('click', _handleChangePriority);
         priorityButtons.appendChild(editPriorityButton);
-    }
+    });
 
+    // Save button
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    saveButton.id = 'save-edit';
+
+    saveButton.addEventListener('click', () => {
+        const updateData = {
+            title: toDoTitle.value,
+            dueDate: toDoDate.value,
+            description: toDoDesc.value,
+            priority: parseInt(priorityButtons.querySelector('.active').dataset.priority)
+        }
+
+        saveEditCallback(updateData)
+    });
     
     toDoDiv.appendChild(toDoTitle); 
     toDoDiv.appendChild(toDoDate);
@@ -70,8 +80,8 @@ export default function createEditableToDo({ title, dueDate, description, priori
     toDoDiv.appendChild(saveButton);
 }
 
-function handleChangePriority(e) {
-    const priorityButtons = document.querySelector('.priority-buttons').children;
+function _handleChangePriority(e) {
+    const priorityButtons = e.target.closest('.priority-buttons').children;
 
     for (let btn of priorityButtons) {
         btn.classList.remove('active');

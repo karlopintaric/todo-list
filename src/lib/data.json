@@ -1,0 +1,34 @@
+{
+    "projects": [
+      {
+        "name": "Default"
+      },
+      {
+        "name": "Home Improvement"
+      }
+    ],
+    "todos": [
+      {
+        "title": "Vacuum the living room",
+        "description": "Vacuum all areas of the living room including under the furniture.",
+        "priority": 2,
+        "done": false,
+        "projectId": 0
+      },
+      {
+        "title": "Clean the kitchen",
+        "description": "Wipe down surfaces, clean dishes, and sweep the floor.",
+        "priority": 1,
+        "done": false,
+        "projectId": 0
+      },
+      {
+        "title": "Organize the garage",
+        "description": "Sort through old boxes, sweep the floor, and create storage space.",
+        "priority": 3,
+        "done": false,
+        "projectId": 1
+      }
+    ]
+  }
+  

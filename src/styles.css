@@ -103,6 +103,8 @@ nav > div,
     padding: 6px;
     padding-left: 16px;
     border-radius: var(--border05);
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 nav > div {

@@ -47,6 +47,12 @@ function ToDoModel() {
     }
 
     const _validatePriority = (priority) => {
+        try {
+            priority = parseInt(priority);
+        } catch (error) {
+            priority = null;
+        }
+
         if (!validPriorities.includes(priority)) {
             priority = null;
         }
